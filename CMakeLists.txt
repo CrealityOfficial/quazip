@@ -1,10 +1,15 @@
-cmake_minimum_required(VERSION 3.1)
+file(GLOB SRCS "*.c" "*.cpp")
+file(GLOB PUBLIC_HEADERS "*.h")
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
-include(ConfigureAllModules) 
+set(SRCS ${SRCS} ${PUBLIC_HEADERS})
+set(INCS ${ZLIB_INCLUDE_DIR})
+set(DEFS QUAZIP_BUILD Z_PREFIX)
 
-project(quazip)
+set(LIBS Qt5::Core zlib)
 
-add_subdirectory(quazip)
+__add_real_target(quazip dll SOURCE ${SRCS} DEF ${DEFS} LIB ${LIBS}
+	INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/../)
 
-__configure_all()
+if(CC_INSTALL_QUAZIP)
+	INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include/ FILES_MATCHING PATTERN "*.h")
+endif()
