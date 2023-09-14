@@ -1,25 +1,23 @@
-file(GLOB SRCS "*.c" "*.cpp")
-file(GLOB PUBLIC_HEADERS "*.h")
+__files_group(${CMAKE_CURRENT_SOURCE_DIR}/quazip/ SRCS)
 
-set(SRCS ${SRCS} ${PUBLIC_HEADERS})
-set(INCS ${ZLIB_INCLUDE_DIR})
-set(DEFS QUAZIP_BUILD Z_PREFIX)
+set(DEFS QUAZIP_STATIC)
 
-__cc_find(zlib)
+__cc_find(zlib_static)
 
 if(NOT TARGET Qt5::Core)
 	__prepare_core_qt5()
 endif()
 
-set(LIBS Qt5::Core zlib)
+set(LIBS Qt5::Core zlib_static)
 
-__add_real_target(quazip dll SOURCE ${SRCS} DEF ${DEFS} LIB ${LIBS}
-	INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/../)
+__add_real_target(quazip_static lib SOURCE ${SRCS}
+						 DEF ${DEFS}
+						 INTERFACE_DEF QUAZIP_STATIC
+						 INC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/quazip/
+						 ILIB ${LIBS}
+						 INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+						 )
 
-if(CC_INSTALL_QUAZIP)
-	if(HAVE_CONAN_CACHE OR CREATE_CONAN_PACKAGE)
-		INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ DESTINATION include/quazip/ FILES_MATCHING PATTERN "*.h")
-	else()
-		INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include/quazip/ FILES_MATCHING PATTERN "*.h")
-	endif()
+if(CC_INSTALL_QUAZIP_STATIC)
+	__install_directory_specif(${CMAKE_CURRENT_SOURCE_DIR}/quazip quazip_static)
 endif()
