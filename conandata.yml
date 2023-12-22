@@ -5,6 +5,6 @@ repository: http://172.20.180.12:8050/yanfa4/thirdparty/quazip
 external_repository: https://github.com/CrealityOfficial/quazip
 description: quazip
 topics: quazip,compression,zip
-build_deps: zlib_static/0.0.1
+build_deps: zlib_static/1.0.0
 search_deps: 
 
